@@ -2,9 +2,7 @@ package serviceImpl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import bean.FilmBean;
 import bean.SessionBean;
@@ -20,10 +18,6 @@ public class FilmServiceImpl implements FilmService {
     private Connection conn;
     private FilmDao film_dao;
 
-    public FilmServiceImpl() {
-
-    }
-    
     @Override
     public List<FilmBean> findByKeyword(String keyword) {
         this.film_dao = new FilmDaoImpl();
@@ -205,11 +199,28 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Object> findView() {
-        // TODO Auto-generated method stub
-        return null;
+    public void sort(List<FilmBean> film_list, String type) {
+        Collections.sort(film_list, new Comparator<FilmBean>() {
+            @Override
+            public int compare(FilmBean f1, FilmBean f2) {
+                double diff;
+                if (type.equals("occupancy")) {
+                    diff = f1.getOccupancy() - f2.getOccupancy();
+                } else if (type.equals("boxoffice")) {
+                    diff = f1.getBoxoffice() - f2.getBoxoffice();
+                } else {
+                    diff = f1.getGrades() - f2.getGrades();
+                }
+                if (diff < 0) {
+                    return 1;
+                } else if (diff > 0) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
     }
-
 }
 
 

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -91,13 +92,17 @@ opacity:0;border-bottom:2px solid #fff;}
 				<li2><a href="film/keySearch.do">影片</a></li2>   
                 <li2><a href="cinema/findAll.do">影院</a></li2>
 				<li2 class="hanglogin">
-   <% if(session.getAttribute("uid")==null) { %>
-   <a href="login.jsp">登录</a>
-   <%} else { %>
-   <a href="personal/findInfo.do" class="logged"><%=session.getAttribute("uname") %></a>
-   <a href="personal/logout.do" class="logged">退出登录</a>
-   <%} %>
-   </li2>	
+                    <c:choose>
+                        <c:when test="${sessionScope.uid eq null}">
+                            <a href="login.jsp">登录</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="personal/findInfo.do" class="logged"><%=session.getAttribute("uname") %></a>
+                            <a href="personal/logout.do" class="logged">退出登录</a>
+                        </c:otherwise>
+                    </c:choose>
+
+   </li2>
 			</ul>
 			
 		</div>

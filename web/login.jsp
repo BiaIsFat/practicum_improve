@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>   
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
-if(session.getAttribute("uid")!=null) {
-    request.getRequestDispatcher("/index.jsp").forward(request, response);
-    return;
-}
 %>
+<!-- Go back if already log in -->
+<c:if test="${sessionScope.uid != null}">
+    <c:redirect url="/index.jsp"/>
+</c:if>
+
 <head>
 <base href="<%=basePath%>">
 <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
@@ -51,42 +53,42 @@ if(session.getAttribute("uid")!=null) {
 .cover{margin:0 auto;float:right;width:40%;height:300px;background-color:#000;margin-top:20%;margin-left:10%;}
  </style>
  <body>
- 
+
 <div class="container">
     <div class="main">
        <div class="mainl">
           <span class="show">
-            <img src="image/city.jpg"></span></div>    
+            <img src="image/city.jpg"></span></div>
       <div class="mainr">
       <h1>WELCOME TO ISEE.COM</h1>
       <span style="color:red;font-size:10px">${msg}</span>
       <form action="personal/goLogin.do" method="post">
       <table class="ta" >
-      <tr> 
+      <tr>
       <td><i class="fa fa-user-circle-o" ></i> </td>
       <td class="m_2"> 账号</td>
       <td> <input style="border-radius:5px" type="text" name="uname"  placeholder="请输入用户名/手机号"  /></td>
       </tr>
-      <tr> 
+      <tr>
       <td> <i class="fa fa-key" ></i></td>
       <td class="m_2"> 密码</td>
       <td> <input style="border-radius:5px" type="password" name="upwd"  placeholder="请输入密码" /></td>
-      </tr>   
-       <tr> 
-       <td></td> 
-           <td>选择身份</td> 
+      </tr>
+       <tr>
+       <td></td>
+           <td>选择身份</td>
         <td><input id="uid" type="radio" checked="checked" name="identify" value="0"/>用户
             <input id="account" type="radio"  name="identify" value="1"/>影院管理员
             <input id="account" type="radio"  name="identify" value="2"/>平台管理员</td>
        </tr>
        <tr><td></td><td></td>
        <td><input type="submit" value="确认登录"/> <a href="register.jsp">Sign Up</a> </td>
-       </tr> 
-      </table> 
-       </form>     
+       </tr>
+      </table>
+       </form>
       </div>
     </div>
-  
+
   </div>
 </body>
 </html>

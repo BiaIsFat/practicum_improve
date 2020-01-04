@@ -1,10 +1,7 @@
 package servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,11 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
 
 import bean.FilmBean;
 import service.FilmService;
@@ -98,9 +90,19 @@ public class FilmServlet extends HttpServlet {
 	
 	protected void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    FilmService film_service = new FilmServiceImpl();
-	    List<FilmBean> film_list = film_service.findAll();
-	    
-	    request.setAttribute("film_list", film_list);
+
+	    List<FilmBean> film_list_occupancy = film_service.findAll();
+	    List<FilmBean> film_list_boxoffice = film_service.findAll();
+	    List<FilmBean> film_list_grades = film_service.findAll();
+
+	    film_service.sort(film_list_occupancy, "occupancy");
+	    film_service.sort(film_list_boxoffice, "boxoffice");
+	    film_service.sort(film_list_grades, "grades");
+
+
+	    request.setAttribute("film_list_occupancy", film_list_occupancy);
+	    request.setAttribute("film_list_boxoffice", film_list_boxoffice);
+	    request.setAttribute("film_list_grades", film_list_grades);
 	    request.getRequestDispatcher("/cinema/index.do").forward(request, response);
 	}
 	

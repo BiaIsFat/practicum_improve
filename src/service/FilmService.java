@@ -2,7 +2,6 @@ package service;
 
 import bean.*;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -10,8 +9,6 @@ import java.util.List;
 public interface FilmService {
 
 	boolean downFilm(int fno);
-	
-	List<Object> findView();
 	
 	List<FilmBean> findAll();
 	
@@ -25,4 +22,5 @@ public interface FilmService {
     boolean changeFilmInfo(int fno, String fname, String otime, String actor, String intro, String type, String pic,
                            String country, int duration, String view, boolean forbidden);
 
+    void sort(List<FilmBean> film_list, String type);
 }
