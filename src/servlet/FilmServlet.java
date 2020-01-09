@@ -41,6 +41,9 @@ public class FilmServlet extends HttpServlet {
 	    // 获取方法前部分长度：/example/film/
 	    int head_length = (request.getContextPath()+request.getServletPath()).length()+1;
 	    String method_name = path.substring(head_length, path.indexOf(".do"));
+
+        System.out.println(this.getClass().getName() + " : " + method_name + "\n");
+
 	    try {
             Method method = getClass().getDeclaredMethod(method_name,
                     HttpServletRequest.class, HttpServletResponse.class);

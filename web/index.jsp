@@ -63,7 +63,7 @@ Fetch data from servlet
     <div class="main">
         <div class="main1"><h1 class="m_2">上座率排行 <i class="fa fa-list-ol"></i></h1>
             <table class="t">
-                <c:forEach items="${requestScope.film_list_occupancy}" var="film" begin="1" end="5">
+                <c:forEach items="${requestScope.film_list_occupancy}" var="film" begin="0" end="4">
                 <tr>
                     <td><h1 class="m_1"><i class="fa fa-heart-o"></i>${film.fname}
                     </h1></td>
@@ -81,7 +81,7 @@ Fetch data from servlet
         </div>
         <div class="main2"><h1 class="m_2">票房排行 <i class="fa fa-list-ol"></i></h1>
             <table class="t_1">
-                <c:forEach items="${requestScope.film_list_boxoffice}" var="film" begin="1" end="5">
+                <c:forEach items="${requestScope.film_list_boxoffice}" var="film" begin="0" end="4">
                 <tr>
                     <td><h1 class="m_1"><i class="fa fa-heart-o"></i>${film.fname}
                     </h1></td>
@@ -93,7 +93,7 @@ Fetch data from servlet
         </div>
         <div class="main3"><h1 class="m_2">评分排行 <i class="fa fa-list-ol"></i></h1>
             <table class="t_2">
-                <c:forEach items="${requestScope.film_list_grades}" var="film" begin="1" end="5">
+                <c:forEach items="${requestScope.film_list_grades}" var="film" begin="0" end="4">
                 <tr>
                     <td><h1 class="m_1"><i class="fa fa-heart-o"></i>${film.fname}
                     </h1></td>
@@ -112,7 +112,7 @@ Fetch data from servlet
         <div class="part1_2"><h1 class="b_1">最近热映 <i class="fa fa-video-camera"></i></h1></div>
         <div class="part1_1">
             <div class="hengtu">
-                <c:forEach items="${requestScope.film_list_boxoffice}" var="film" begin="1" end="5">
+                <c:forEach items="${requestScope.film_list_boxoffice}" var="film" begin="0" end="4">
                     <img class="film-pic" src="image/${film.pic}">
                 </c:forEach>
             </div>
@@ -124,7 +124,7 @@ Fetch data from servlet
             <div class="part2_1"><h1>欢迎来到评论区讨论</h1></div>
             <div class="part2_2">
                 <div class="jj">
-                   <c:forEach items="${requestScope.film_list_boxoffice}" var="film" begin="1" end="5">
+                   <c:forEach items="${requestScope.film_list_boxoffice}" var="film" begin="0" end="4">
                     <img class="film-pic" src="image/${film.pic}">
                    </c:forEach>
                     <!--
@@ -207,7 +207,7 @@ Fetch data from servlet
                                             <li>上映时间：<span>${film.ontime}</span></li>
                                             <li>发行国家：<span>${film.country}</span></li>
                                         </ul>
-                                        <p class="qirepic-silder-desc">剧情：<span>${film.info}</span></p>
+                                        <p class="qirepic-silder-desc">剧情：<span>${film.intro}</span></p>
                                         <a class="qirepic-silder-play" href="" target="_blank">立即观看</a>
                                     </div>
                                 </div>

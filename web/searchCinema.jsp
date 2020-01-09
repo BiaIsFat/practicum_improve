@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8" import="bean.*,java.util.*"%>
+    pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
@@ -33,24 +34,22 @@
 
         </div>       
    <div class="align-right">
-            <ul class="header-nav">
-           <% if(session.getAttribute("uid")==null) { %>
-             <a href="login.jsp">登录</a>
-   <%} else { %>
-             <a href="personal/findInfo.do" class="logged"><%=session.getAttribute("uname") %></a>
-             <a href="personal/logout.do" class="logged">退出登录</a>
-   <%} %>
-    <a href="index.jsp"> 返回首页</a>
-            </ul>   
-     
-            
+       <ul class="header-nav">
+           <c:choose>
+               <c:when test="${sessionScope.uid eq null}">
+                   <a href="login.jsp">登录</a>
+               </c:when>
+               <c:otherwise>
+                   <a href="personal/findInfo.do" class="logged">
+                       ${sessionScope.uname}
+                   </a>
+                   <a href="personal/logout.do" class="logged">退出登录</a>
+               </c:otherwise>
+           </c:choose>
+           <a href="index.jsp"> 返回首页</a>
+       </ul>
         </div>
-       
-
     </div>
-
-
-
 
 <div class="wrapper">
     <div class="inner-wrapper">
@@ -78,36 +77,27 @@
 
         </div>
         <div class="movlist">
-        <ul>
-<%
-            if(request.getAttribute("cinema_list") != null) {
-                List<CinemaBean> cinema_list = (List)request.getAttribute("cinema_list");
-                int i=0;
-                for(CinemaBean cinema : cinema_list) {
-%>
-<!-- 影院显示格式还需要调整，等待鉴美大师 -->
-<li data-index="<%=i%>" style="width:100%">
-<a href="cinema/findOne.do?cno=<%=cinema.getCno()%>&fno=${fno}">
-<img src="./image/<%=cinema.getCno() %>.png"  />
-<span class="item-title" title="<%=cinema.getCname() %>"><%=cinema.getCname() %></span>
-<span class="item-pubtime" title="2019-12-25上映">2019-12-25上映</span>
-</a>
-</li>      
+            <ul>
 
-  <%i++;}  }%>         
-        </ul>
+                <!-- 影院显示格式还需要调整，等待鉴美大师 -->
+                <!--调整完毕-->
+                <c:forEach items="${requestScope.cinema_list}" var="cinema" varStatus="status">
+                    <li data-index="${status.index+1}" style="width:100%">
+                        <a href="cinema/findOne.do?cno=${cinema.cno}&fno=${fno}">
+                            <img src="./image/${cinema.cno}.png"/>
+                            <span class="item-title" title="${cinema.cname}">${cinema.cname}</span>
+                            <span class="item-pubtime" title="2019-12-25上映">2019-12-25上映</span>
+                        </a>
+                    </li>
+                </c:forEach>
+            </ul>
         </div>
         <p class="page-nav"><!-- 下一页暂时没解决 -->
             <a href="/movlist/____1" class="current">1</a><a href="/movlist/____2">2</a><a href="/movlist/____3">3</a><a href="/movlist/____4">4</a><a href="/movlist/____5">5</a><a href="/movlist/____6">6</a><a href="/movlist/____7">7</a>...<a href="/movlist/____402">402</a><a href="/movlist/____2">下一页</a>        </p>
-        
-        
-
 
     </div>
-    
-    
-        <div class="inner-2col-side">
 
+        <div class="inner-2col-side">
 
             <h3 class="list-title">
                 电影分类

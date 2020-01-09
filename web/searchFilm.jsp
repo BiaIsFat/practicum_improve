@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8" import="bean.*,java.util.*"%>
-    <%
-    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
-    
-    %>
+    pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,18 +33,23 @@
                 </form> 
             </div>
 
-        </div>       
-   <div class="align-right">
-            <ul class="header-nav">
-           <% if(session.getAttribute("uid")==null) { %>
-             <a href="login.jsp">登录</a>
-   <%} else { %>
-             <a href="personal/findInfo.do" class="logged"><%=session.getAttribute("uname") %></a>
-             <a href="personal/logout.do" class="logged">退出登录</a>
-   <%} %>
-   <a href="index.jsp"> 返回首页</a>
-            </ul>   
         </div>
+    <div class="align-right">
+        <ul class="header-nav">
+            <c:choose>
+                <c:when test="${sessionScope.uid eq null}">
+                    <a href="login.jsp">登录</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="personal/findInfo.do" class="logged">
+                            ${sessionScope.uname}
+                    </a>
+                    <a href="personal/logout.do" class="logged">退出登录</a>
+                </c:otherwise>
+            </c:choose>
+            <a href="index.jsp"> 返回首页</a>
+        </ul>
+    </div>
     </div>
 </div>
 <div class="container3">
@@ -69,24 +74,23 @@
                 <dd><a href="/movlist/____" class="current">最近更新</a><a href="/movlist/___pubtime_">上映日期</a></dd>
             </dl>
         </div>
-        <div class="movlist">
-        <ul>
-<%
-            if(request.getAttribute("film_list") != null) {
-                List<FilmBean> film_list = (List)request.getAttribute("film_list");
-                int i=0;
-                for(FilmBean film : film_list) {
-        %>
-			<li data-index="<%=i%>">
-				<a href="film/find_one.do?fno=<%=film.getFno()%>" target="_blank">
-					<img src="./image/<%=film.getPic()%>" alt="<%=film.getFname() %>" />
-					<span class="item-title" title="<%=film.getFname() %>"><%=film.getFname() %></span>
-					<span class="item-pubtime" title="评分">评分：<%=film.getGrades() %></span>
-				</a>
-			</li>                
-  <%i++;}  }%>         
-        </ul>
-        </div>
+
+            <!--电影列表-->
+            <div class="movlist">
+                <ul>
+                    <c:forEach items="${requestScope.film_list}" var="film" varStatus="status">
+                        <li data-index="${status.index+1}">
+                            <a href="film/find_one.do?fno=${film.fno}" target="_blank">
+                                <img src="./image/${film.pic}" alt="${film.fname}"/>
+                                <span class="item-title" title="${film.fname}">${film.fname}</span>
+                                <span class="item-pubtime" title="评分">评分：${film.grades}</span>
+                            </a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+
+
         <p class="page-nav"><!-- 下一页暂时没解决 -->
             <a href="/movlist/____1" class="current">1</a><a href="/movlist/____2">2</a><a href="/movlist/____3">3</a><a href="/movlist/____4">4</a><a href="/movlist/____5">5</a><a href="/movlist/____6">6</a><a href="/movlist/____7">7</a>...<a href="/movlist/____402">402</a><a href="/movlist/____2">下一页</a>        </p>
     </div>

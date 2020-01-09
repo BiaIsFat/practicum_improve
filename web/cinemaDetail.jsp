@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8" import="bean.*,java.util.List"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,8 +10,8 @@
 %>
 <base href="<%=basePath%>">
 <meta charset="utf-8" />
-<title><%=cinema.getCname() %></title>
-<jsp:include page="dir.jsp" flush="true"></jsp:include>
+<title>${requestScope.cinema.cname}</title>
+<jsp:include page="dir.jsp" flush="true" />
 <meta content="webkit" name="renderer" />
 <meta name="applicable-device" content="pc">
 <meta http-equiv="X-UA-Compatible" content="IE=8" />
@@ -30,21 +31,24 @@
 
 <div id="title-wrapper" class="wrapper movie-title-wrapper">
     <div class="inner-wrapper">
-        <div class="movie-title-mpic">            <a href="/" title="半个喜剧电影海报"><img src="image/1.png" alt="半个喜剧电影海报"/></a>
+        <div class="movie-title-mpic">
+            <a href="/" title="${requestScope.cinema.cname}">
+                <img src="image/${requestScope.cinema.cno}.png" alt="${requestScope.cinema.cname}"/>
+            </a>
             
         </div>
-        <h1 class="movie-name" title="<%=cinema.getCname() %>"><%=cinema.getCname() %></h1>
+        <h1 class="movie-name" title="${requestScope.cinema.cname}">${requestScope.cinema.cname}</h1>
         <div class="movie-title-detail">
             <p>
-            <span class="detail-title">地址：</span><%=cinema.getAddr() %><br/>
-            
-            <span class="detail-title">电话：</span><%=cinema.getTel() %><br/>
-            <span class="detail-title">营业时间：</span><%=cinema.getWorktime() %>
- <br/>
-            </p>       
-        <div class="movie-quickplay"> 
-        <a href="javascript:history.back(-1)" class="btn-big btn-green">返回</a> 
-        </div>
+                <span class="detail-title">地址：</span>${requestScope.cinema.addr}<br/>
+
+                <span class="detail-title">电话：</span>${requestScope.cinema.tel}<br/>
+                <span class="detail-title">营业时间：</span>${requestScope.cinema.worktime}
+                <br/>
+            </p>
+            <div class="movie-quickplay">
+                <a href="javascript:history.back(-1)" class="btn-big btn-green">返回</a>
+            </div>
         </div>
     <div class="movie-sideinfo">
 
@@ -75,49 +79,35 @@
               <th class="tlist-addtime">票价</th>
               <th class="tlist-fromsite"></th>
             </tr>
-            <%
-              if(request.getAttribute("session_list") != null) {
-                 List<SessionBean> session_list = (List)request.getAttribute("session_list");
-                 int i=0;
-                 for(SessionBean sbean : session_list) {
-                     i++;
-                 %>
-      <tr>
-	      <td><span><%=i %></span></td>
-	      <td>
-	        <a href="/" class="tlist-title" target="_blank"><%=sbean.getFilm().getFname() %></a>
-	      </td>
-	      <td>
-	        <a href="/" class="tlist-title" target="_blank"><%=sbean.getBegin_time() %></a> 
-	      </td> 
-	           <td>
-	        <a href="/" class="tlist-title" target="_blank"><%=sbean.getEnd_time() %></a> 
-	      </td>   
-	      <td>
-	        <a href="/" class="tlist-title" target="_blank"><%=sbean.getPrice() %></a>
-	      </td>
-	      <td>
-	          <a id="dlbtn130525" href="sessionseat/findSeats.do?sno=<%=sbean.getSno() %>" style="background-color:#7cd37c;color:#000" target="_blank" title="">选座</a>
-          </td>
-    </tr> 
-                 <%
-                 }   
-              }
-            %>
-                   </table>
+              <c:forEach items="${requestScope.session_list}" varStatus="status" var="sbean">
+              <tr>
+                  <td><span>${status.index+1}</span></td>
+                  <td>
+                      <a href="/" class="tlist-title" target="_blank">${sbean.film.fname}
+                      </a>
+                  </td>
+                  <td>
+                      <a href="/" class="tlist-title" target="_blank">${sbean.begin_time}
+                      </a>
+                  </td>
+                  <td>
+                      <a href="/" class="tlist-title" target="_blank">${sbean.end_time}
+                      </a>
+                  </td>
+                  <td>
+                      <a href="/" class="tlist-title" target="_blank">${sbean.price}
+                      </a>
+                  </td>
+                  <td>
+                      <a id="dlbtn130525" href="/sessionseat/findSeats.do?sno=${sbean.sno}"
+                         style="background-color:#7cd37c;color:#000" target="_blank" title="">选座</a>
+                  </td>
+              </tr>
+              </c:forEach>
+
+          </table>
         </div>
         </div>    
-
-
-
-
-
-
-
-
-
-
-
 
     </div>
 </div>
