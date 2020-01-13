@@ -6,7 +6,6 @@
 <head>
 <%
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
-    CinemaBean cinema = (CinemaBean)request.getAttribute("cinema");
 %>
 <base href="<%=basePath%>">
 <meta charset="utf-8" />
@@ -47,7 +46,7 @@
                 <br/>
             </p>
             <div class="movie-quickplay">
-                <a href="javascript:history.back(-1)" class="btn-big btn-green">返回</a>
+                <a href="javascript:history.back()" class="btn-big btn-green">返回</a>
             </div>
         </div>
     <div class="movie-sideinfo">

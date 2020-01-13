@@ -1,20 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="bean.*,java.util.*"%> 
-    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
-/*if(session.getAttribute("uid")==null) {
-    request.setAttribute("msg", "not login");
-    response.sendRedirect(request.getContextPath()+"/film/index.do");
-    return;
-}*/
-SessionBean sbean = (SessionBean)request.getAttribute("session");
-List<SessionSeatBean> ss_list = (List)request.getAttribute("ss_list");
-CinemaBean cinema = (CinemaBean)request.getAttribute("cinema");
-FilmBean film = sbean.getFilm();
 %>
+<c:set var="sbean" value="${requestScope.session}"/>
+<c:set var="ss_list" value="${requestScope.ss_list}"/>
+<c:set var="cinema" value="${requestScope.cinema}"/>
+<c:set var="film" value="${sbean.film}"/>
 <head>
 <base href="<%=basePath%>"> <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" >
 <link rel="stylesheet" type="text/css" href="css/16sucai.css">
@@ -24,7 +19,7 @@ FilmBean film = sbean.getFilm();
 
 <title>座位预定</title>
 
-<jsp:include page="dir.jsp" flush="true"></jsp:include>
+<jsp:include page="dir.jsp" flush="true"/>
 
 </head>
 <style type="text/css">
@@ -189,30 +184,26 @@ $(document).ready(function(){
  <!--BOOKING SECTION START-->
 <div class="container">
     <div class="main">
- 
-    
     <div class="part"></div>
-    
-    
     <div class="warpper">
     <div class="wwwqirecom">
     	<div class="qirepic">
             <ul class="info">
                 <li>
                 	<div class="qirepic-silder-panel">
-                    	<a class="qirepic-silder-img" href="#"><img src="image/<%=film.getFname() %>.png" /></a>
+                    	<a class="qirepic-silder-img" href="#"><img src="image/${film.fname}.png" /></a>
                         <div class="qirepic-silder-intro">
                         	<div class="qirepic-silder-title">
-                            	<h2><a target="_blank" href="#" title="<%=film.getFname() %>"><%=film.getFname() %></a></h2>
+                            	<h2><a target="_blank" href="#" title="${film.fname}">${film.fname}</a></h2>
                             </div>
                             <ul class="qirepic-silder-info clearfix">
-                            	<li class="long"><label>主演：</label><span><%=film.getActor() %></span></li>
-                                <li>类型：<span><%=film.getType() %></span></li>
-                                <li>开场时间：<span><%=sbean.getBegin_time() %></span></li>
-                                <li>影厅：<span><%=sbean.getRoom().getRname() %></span></li>
-                                <li><%=cinema.getCname() %><span></span></li>
+                            	<li class="long"><label>主演：</label><span>${film.actor}</span></li>
+                                <li>类型：<span>${film.type}</span></li>
+                                <li>开场时间：<span>${sbean.begin_time}</span></li>
+                                <li>影厅：<span>${sbean.room.rname}</span></li>
+                                <li>${cinema.cname}<span></span></li>
                             </ul>
-                            <p class="qirepic-silder-desc">地址：<span><%=cinema.getAddr() %></span></p>
+                            <p class="qirepic-silder-desc">地址：<span>${cinema.addr}</span></p>
                         </div>
                     </div>
                 </li>
@@ -230,10 +221,10 @@ $(document).ready(function(){
             </p>
             </span>
             <div id="seats">
+<!--排列输出没想好这么写，以后再说吧-->
             <%
             int row = (int)Math.ceil(ss_list.size() / 6.0);
             
-	        //for(SessionSeatBean ssbean : ss_list) { 
 	            for(int i = 0; i < row; i++) {
 	                %><div class="seatsRaw"><%
 	                        for(int j=0; j < 6; j++) { 
@@ -245,7 +236,7 @@ $(document).ready(function(){
             %>
 
             </div>
-                    <form action="sessionseat/findOne.do?sno=<%=sbean.getSno()%>" method="post">
+                    <form action="sessionseat/findOne.do?sno=${sbean.sno}" method="post">
               <div id="booking_desc">
                 <div class="booking_left">
                     <p style="color: #FBBC53;font-weight: bold; font-size: larger;">您选中的座位 </p>
@@ -255,7 +246,7 @@ $(document).ready(function(){
                     <div id="errMsg"></div>
                 </div>
 
-                <div class="booking_right">每个座位的单价: <%=sbean.getPrice()%> 元
+                <div class="booking_right">每个座位的单价: ${sbean.price} 元
                     <br><br>
                     <div id="total">总价：<span> 0 </span></div>
                     <input type="hidden" name="total" value="" id="total-price">

@@ -1,22 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8" import="bean.*,java.util.*"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <%
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
-    FilmBean film = (FilmBean)request.getAttribute("film");
-    if(film == null) {
-        /**
-         * 缺少提示 未选择电影
-         */
-        response.sendRedirect("search.jsp");
-    }
 %>
+    <!-- No film chosen -->
+    <c:if test="${requestScope.film eq null}">
+        <!-- Alert function invalid-->
+        <script>alert("Choose a film")</script>
+        <c:redirect url="/film/keySearch.do"/>
+    </c:if>
 <base href="<%=basePath%>">
 <meta charset="utf-8" />
-<title><%=film.getFname() %> 电影详情</title>
-<jsp:include page="dir.jsp" flush="true"></jsp:include>
+<title>${requestScope.film.fname}_电影详情</title>
+<jsp:include page="dir.jsp" flush="true" />
 <meta content="webkit" name="renderer" /><meta name="applicable-device" content="pc"><meta http-equiv="X-UA-Compatible" content="IE=8" /><link rel="stylesheet" href="css/3.css" />
 <link rel="stylesheet" href="css/2.css" />
 <script>
@@ -28,48 +28,51 @@ function reply(cno, fno, name) {
 <body class="movie-page">
 <div class="whole">
 
-<div id="title-wrapper" class="wrapper movie-title-wrapper">
-    <div class="inner-wrapper">
-        <div class="movie-title-mpic">
-        <a href="/" title="<%=film.getFname() %>电影海报"><img src="image/<%=film.getPic() %>" alt="<%=film.getFname() %>电影海报"/></a>
-            
+    <div id="title-wrapper" class="wrapper movie-title-wrapper">
+        <div class="inner-wrapper">
+            <div class="movie-title-mpic">
+                <a href="/" title="${requestScope.film.fname}电影海报">
+                    <img src="image/${requestScope.film.pic}" alt="${requestScope.film.fname}电影海报"/>
+                </a>
+
+            </div>
+            <h1 class="movie-name" title="${requestScope.film.fname}">${requestScope.film.fname}</h1>
+            <div class="movie-title-detail">
+                <p>
+                    <span class="detail-title">类型：</span>
+                    <a href="/country/中国大陆" title="中国大陆电影" target="_blank">${requestScope.film.country}</a> /
+                    <a href="/movietype/喜剧" target="_blank">${requestScope.film.type}</a> <br/>
+                    <span class="detail-title">上映：</span>${requestScope.film.ontime}<br/>
+                    <span class="detail-title">时长：</span>${requestScope.film.duration} &nbsp; &nbsp;
+                    <span class="detail-title">主演：</span>${requestScope.film.actor}
+                    <br/>
+                    <span class="detail-title">剧情：</span>
+                    ${requestScope.film.intro}
+                </p>
+                <div class="movie-quickplay">
+                    <a href="cinema/searchByFilm.do?fno=${requestScope.film.fno }" class="btn-big btn-green">去购票</a>
+                    <a href="javascript:history.back()" class="btn-big btn-red">返回</a>
+                </div>
+            </div>
+
         </div>
-        <h1 class="movie-name" title="<%=film.getFname() %>"><%=film.getFname() %></h1>
-        <div class="movie-title-detail">
-            <p>
-            <span class="detail-title">类型：</span><a href="/country/中国大陆" title="中国大陆电影" target="_blank"><%=film.getCountry() %></a> /
-             <a href="/movietype/喜剧" target="_blank"><%=film.getType() %></a> <br/>
-            <span class="detail-title">上映：</span><%=film.getOntime() %><br/>
-            <span class="detail-title">时长：</span><%=film.getDuration() %> &nbsp; &nbsp; 
-            <span class="detail-title">主演：</span><%=film.getActor() %>
- <br/>
-        <span class="detail-title">剧情：</span>
-        <%=film.getIntro() %>
-            </p>       
-        <div class="movie-quickplay"> 
-        <a href="cinema/searchByFilm.do?fno=${film.fno }" class="btn-big btn-green">去购票</a> 
-        <a href="javascript:history.back(-1)"class="btn-big btn-red">返回</a> 
-        </div>
-        </div>
-  
-    </div>    
-</div>
+    </div>
 <a name="content-anchor" id="content-anchor" href="#"></a>
 <div class="wrapper nav-wrapper">
     <div class="inner-wrapper">
-<a href="/movie/29139" title="《<%=film.getFname() %>》预告片" class="current">预告片 <span class="shownum">1</span></a>
+<a href="/movie/29139" title="《${requestScope.film.fname}》预告片" class="current">预告片 <span class="shownum">1</span></a>
     </div>
 </div>
 <div class="wrapper">
     <div class="inner-wrapper">
     <div class="inner-2col-main">
             <h2 class="list-title">
-                <%=film.getFname() %>预告片
+                ${requestScope.film.fname}预告片
 <div id="trailer-fromurl-filter" class="list-title-filter"></div>
             </h2>
 
    <video id="video" controls preload="auto" width="400px" height="300px">
- <source src="./videos/<%=film.getFname() %>.mp4" type="video/mp4">
+ <source src="./videos/${requestScope.film.fname}.mp4" type="video/mp4">
 </video>
 <script>
  layer.open({
@@ -85,10 +88,6 @@ function reply(cno, fno, name) {
      }, 0);
  }
  });
- 
-
-
- 
 </script>
         </div>    
         <div class="inner-2col-side">
@@ -114,50 +113,53 @@ function reply(cno, fno, name) {
 
 <!-- 都还没搞提交按钮 -->
         <div class="comment-block">
-            <form action="personal/addcomment.do?fno=<%=film.getFno()%>" method="post">
+            <form action="personal/addcomment.do?fno=${requestScope.film.fno}" method="post">
                 <textarea name="content" id="" cols="30" rows="3" placeholder="发表你的评论..."></textarea>
-                 <input type="submit"> 
+                 <input type="submit" value="评论">
             </form>
         </div>
-  <% 
-  if(request.getAttribute("comment_list") != null) {
-  List<CommentBean> comment_list = (List)request.getAttribute("comment_list");
-  for(CommentBean comment : comment_list) { %>
-    <div class="comment-wrap">
-        <div class="comment-block">
-            <p class="comment-text"><%=comment.getUser().getUname()%><%=(comment.getReplyno()!=1)?"@"+comment.getComment().getUser().getUname():"" %>：<%=comment.getContent() %></p>
-            <div class="bottom-comment">
-                <div class="comment-date"><%=comment.getCtime() %></div>
-                <ul class="comment-actions">
-                    <li class="complain">Complain</li>
-                    <li class="reply">
-                     
-                  <button onclick="reply(<%=comment.getCno()%>,<%=film.getFno()%>,'<%=comment.getUser().getUname()%>')">replay</button>  
-                    
-               <script>  
-               function openWin(url,text,winInfo){
-            	 	var winObj = window.open(url,text,winInfo);
-            	 	var loop = setInterval(function() {     
-            	 	    if(winObj.closed) {    
-            	 	        clearInterval(loop);    
-            	 	        //alert('closed');    
-            	 	        parent.location.reload(); 
-            	 	    }    
-            	 	}, 1);   
-            	 }
-        
-	</script>                 
-                     
-                    </li> 
-                    
-                </ul>
+    <!-- Display comments -->
+    <c:forEach items="${requestScope.comment_list}" var="comment">
+        <div class="comment-wrap">
+            <div class="comment-block">
+                <p class="comment-text">
+                        ${comment.user.uname} <c:if
+                        test="${comment.replyno != 1}"> @${comment.comment.user.uname}</c:if>
+                    ：${comment.content}
+                </p>
+                <div class="bottom-comment">
+                    <div class="comment-date">${comment.ctime}
+                    </div>
+                    <ul class="comment-actions">
+                        <li class="complain">Complain</li>
+                        <li class="reply">
+
+                            <button onclick="reply(${comment.cno},${requestScope.film.fno},'${comment.user.uname}')">
+                                replay
+                            </button>
+
+                            <script>
+                                function openWin(url, text, winInfo) {
+                                    var winObj = window.open(url, text, winInfo);
+                                    var loop = setInterval(function () {
+                                        if (winObj.closed) {
+                                            clearInterval(loop);
+                                            //alert('closed');
+                                            parent.location.reload();
+                                        }
+                                    }, 1);
+                                }
+                            </script>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <%} } else { %> <p>暂无评论</p> <% }%>
-
-
-
+    </c:forEach>
+    <!-- If no comments -->
+    <c:if test="${requestScope.comment_list eq null}">
+        <p>暂无评论</p>
+    </c:if>
 </div>
 </body>
 </html>
